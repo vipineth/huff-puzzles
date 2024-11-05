@@ -8,6 +8,8 @@
  *  The task is to write within the `MAIN` macro below, huff code to get and return the length of this calldata, 
 */
 
-#define macro MAIN() = takes(0) returns(0) {
-    
+#define macro MAIN() = takes(0) returns(32) {
+  calldatasize
+  0x00 mstore
+  0x20 0x00 return
 }
