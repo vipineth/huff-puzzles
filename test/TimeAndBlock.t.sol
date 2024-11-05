@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "forge-std/Test.sol";
 import {HuffDeployer} from "foundry-huff/HuffDeployer.sol";
 import {NonMatchingSelectorHelper} from "./test-utils/NonMatchingSelectorHelper.sol";
-
+import {console} from "forge-std/console.sol";
 interface TimeAndBlock {
     function getTimeAndBlock() external returns (uint256, uint256);
 }
@@ -20,7 +20,6 @@ contract TimeAndBlockTest is Test, NonMatchingSelectorHelper {
         vm.assume(skipBlocks < type(uint256).max);
         skip(skipBlocks);
         (uint256 timestamp, uint256 blockNumber) = timeAndBlock.getTimeAndBlock();
-
         assertEq(
             timestamp,
             block.timestamp,
@@ -43,7 +42,7 @@ contract TimeAndBlockTest is Test, NonMatchingSelectorHelper {
         );
     }
 
-    /// @notice Test that a non-matching selector reverts
+    // @notice Test that a non-matching selector reverts
     function testNonMatchingSelector(bytes32 callData) public {
         bytes4[] memory func_selectors = new bytes4[](1);
         func_selectors[0] = TimeAndBlock.getTimeAndBlock.selector;
