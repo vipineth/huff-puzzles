@@ -13,6 +13,37 @@
 #define function getTimeUntil(uint256) payable returns(uint256)
 
 
-#define macro MAIN() = takes(0) returns(0) {
+#define macro GET_TIME_ELAPSED() = takes(0) returns(1) {
+  timestamp // [timestamp]
+  0x04 calldataload // [input, timestamp]
+  dup2 dup2 // [input, timestamp input, timestamp]
+  gt // [0/1, input, timestamp]
+  iszero return // [0/1]
+  sub return // [diff]
+}
 
+#define macro GET_TIME_UNTIL() = takes(0) returns(1) {
+  timestamp // [timestamp]
+  0x04 calldataload // [input, timestamp]
+  dup2 dup2 // [input, timestamp input, timestamp]
+  lt // [0/1, input, timestamp]
+  iszero return // [0/1]
+  swap1 // [timestamp, input]
+  sub return // [diff]
+}
+
+#define macro MAIN() = takes(0) returns(0) { 
+  0x00 calldataload 0x0e shr // [funcSig]
+  dup1 __FUNC_SIG(getTimeElapsed) eq getTimeElapsed jumpi
+  dup1 __FUNC_SIG(getTimeUntil) eq getTimeUntil jumpi
+
+  0x00 0x00 revert
+
+  getTimeElapsed:
+    GET_TIME_ELAPSED()
+    return
+
+  getTimeUntil:
+    GET_TIME_UNTIL()
+    return
 }
