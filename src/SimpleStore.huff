@@ -14,7 +14,20 @@
 #define function store(uint256) payable returns()
 #define function read() payable returns(uint256)
 
+#define constant STORAGE_POINTER = FREE_STORAGE_POINTER()
+
 
 #define macro MAIN() = takes(0) returns(0) {
-    
+    0x00 calldataload 0xE0 shr
+
+    dup1 __FUNC_SIG(store) eq store jumpi
+    dup1 __FUNC_SIG(read)  eq read jumpi
+
+    0x00 0x00 revert
+
+    store:
+        0x04 calldataload [STORAGE_POINTER] sstore
+    read:
+        [STORAGE_POINTER] sload 0x00 mstore
+        0x20 0x00 return
 }

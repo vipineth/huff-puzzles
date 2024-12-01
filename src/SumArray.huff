@@ -12,5 +12,19 @@
 
 
 #define macro MAIN() = takes(0) returns(0) {
+    0x00 calldataload 0xE0 shr
+    __FUNC_SIG(sumArray) eq sum_array jumpi
+    0x00 0x00 revert
 
+    sum_array:
+        0x04 calldataload // [offset]
+        0x24 calldataload // [length, offset]
+        dup1 iszero zero jumpi // check zero length
+
+        
+
+
+    zero:
+        0x00 mstore
+        0x20 0x00 return
 }

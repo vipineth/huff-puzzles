@@ -8,5 +8,27 @@
 #define function donated(address) payable returns(uint256)
 
 #define macro MAIN() = takes(0) returns(0) {
-    
+    0x00 calldataload 0xe0 shr
+    __FUNC_SIG(donated) eq donated_jump jumpi
+
+    callvalue receive_jump jumpi
+
+    0x00 0x00 return
+
+    receive_jump:
+        caller 0x00 mstore
+        0x14 0x00 sha3
+        sload               
+        callvalue           
+        add                 
+        0x14 0x00 sha3             
+        sstore              
+        0x00 0x00 return
+
+    donated_jump:
+        0x04 calldataload 0x00 mstore // store the address of user to memory
+        0x14 0x00 sha3 // hash the address (to compute the slot)
+        sload              
+        0x00 mstore         
+        0x20 0x00 return
 }
